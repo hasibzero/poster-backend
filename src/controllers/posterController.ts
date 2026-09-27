@@ -103,6 +103,10 @@ export const regeneratePoster = asyncHandler(async (req: AuthRequest, res: Respo
     throw new AppError('Not authorized', 403);
   }
 
+  if (!poster.templateId) {
+    throw new AppError('This template is no longer available.', 400);
+  }
+
   if (poster.retryCount >= config.generation.maxRetries) {
     throw new AppError(`Maximum ${config.generation.maxRetries} retries exceeded`, 400);
   }
@@ -191,18 +195,22 @@ const generatePosterAsync = async (posterId: string) => {
   } catch (error) {
     console.error('Generation error:', error);
     
-    await Poster.findByIdAndUpdate(posterId, {
-      status: 'failed',
-      errorMessage: error instanceof Error ? error.message : 'Generation failed',
-    });
+    try {
+      await Poster.findByIdAndUpdate(posterId, {
+        status: 'failed',
+        errorMessage: error instanceof Error ? error.message : 'Generation failed',
+      });
 
-    await GenerationLog.create({
-      posterId: new mongoose.Types.ObjectId(posterId),
-      geminiPromptUsed: '',
-      tokensUsed: 0,
-      latencyMs: Date.now() - startTime,
-      success: false,
-    });
+      await GenerationLog.create({
+        posterId: new mongoose.Types.ObjectId(posterId),
+        geminiPromptUsed: 'failed', // required field
+        tokensUsed: 0,
+        latencyMs: Date.now() - startTime,
+        success: false,
+      });
+    } catch (innerError) {
+      console.error('Failed to log generation error:', innerError);
+    }
   }
 };
 

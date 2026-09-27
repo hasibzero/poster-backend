@@ -20,7 +20,6 @@ export const uploadToCloudinary = async (
         folder,
         resource_type: 'image',
         quality: 'auto:good',
-        format: 'auto',
         ...options,
       },
       (error, result) => {
