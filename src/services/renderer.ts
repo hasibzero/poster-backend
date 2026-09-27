@@ -1,4 +1,3 @@
-import puppeteer from 'puppeteer';
 import { TemplateLayoutConfig, PosterFormData } from 'shared/types';
 
 interface RenderOptions {
@@ -9,10 +8,11 @@ interface RenderOptions {
   occasionColors: { primary: string; secondary: string; accent: string };
 }
 
-let browser: puppeteer.Browser | null = null;
+let browser: any = null;
 
-export const getBrowser = async (): Promise<puppeteer.Browser> => {
+export const getBrowser = async (): Promise<any> => {
   if (!browser || !browser.isConnected()) {
+    const puppeteer = (await import('puppeteer')).default || await import('puppeteer');
     browser = await puppeteer.launch({
       headless: true,
       args: [
@@ -347,11 +347,12 @@ export const renderPosterToBuffer = async (options: RenderOptions): Promise<Buff
   }
 };
 
-import { PDFDocument } from 'pdf-lib';
-
 export const renderPosterToPDF = async (options: RenderOptions): Promise<Buffer> => {
   // First, generate the perfect PNG buffer
   const pngBuffer = await renderPosterToBuffer(options);
+  
+  // Dynamically import pdf-lib to prevent top-level Serverless crashes
+  const { PDFDocument } = await import('pdf-lib');
   
   // Create a new PDF Document
   const pdfDoc = await PDFDocument.create();
