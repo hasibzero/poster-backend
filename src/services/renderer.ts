@@ -1,4 +1,4 @@
-import { TemplateLayoutConfig, PosterFormData } from 'shared/types';
+import { TemplateLayoutConfig, PosterFormData } from '../../shared/types';
 
 interface RenderOptions {
   templateLayout: TemplateLayoutConfig;

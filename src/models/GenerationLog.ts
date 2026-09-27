@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { GenerationLog } from 'shared/types';
+import { GenerationLog } from '../../shared/types';
 
 export interface IGenerationLog extends Document, Omit<GenerationLog, '_id' | 'posterId'> {
   posterId: Schema.Types.ObjectId;

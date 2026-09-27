@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Template, TemplateLayoutConfig, PhotoSlot, TextSlot, BackgroundConfig, DecorativeElement } from 'shared/types';
+import { Template, TemplateLayoutConfig, PhotoSlot, TextSlot, BackgroundConfig, DecorativeElement } from '../../shared/types';
 
 export interface ITemplate extends Document, Omit<Template, '_id' | 'layoutConfig'> {
   layoutConfig: TemplateLayoutConfig;

@@ -7,7 +7,7 @@ import { uploadToCloudinary } from '../config/cloudinary';
 import { getLayoutSuggestions } from '../services/gemini';
 import { renderPosterToBuffer, renderPosterToPDF } from '../services/renderer';
 import { AuthRequest } from '../middleware/auth';
-import { OCCASION_COLORS } from 'shared/types';
+import { OCCASION_COLORS } from '../../shared/types';
 
 export const createPoster = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = req.user!._id;

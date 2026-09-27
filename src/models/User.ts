@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { User as UserType } from 'shared/types';
+import { User as UserType } from '../../shared/types';
 
 export interface IUser extends Document, Omit<UserType, '_id'> {
   passwordHash: string;

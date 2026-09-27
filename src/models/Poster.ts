@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Poster, PosterFormData } from 'shared/types';
+import { Poster, PosterFormData } from '../../shared/types';
 
 export interface IPoster extends Document, Omit<Poster, '_id' | 'userId' | 'templateId'> {
   userId: Schema.Types.ObjectId;
