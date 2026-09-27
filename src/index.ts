@@ -17,6 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Ensure DB is connected for serverless environments (like Vercel)
 app.use(async (req, res, next) => {
+  if (req.path === '/' || req.path === '/api/health') {
+    return next();
+  }
+  
   try {
     await connectDB();
     next();
