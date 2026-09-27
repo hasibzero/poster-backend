@@ -77,3 +77,11 @@ export const getAnalytics = asyncHandler(async (req: Request, res: Response) => 
     },
   });
 });
+
+export const getUsers = asyncHandler(async (req: Request, res: Response) => {
+  const users = await User.find({}, '-passwordHash').sort({ createdAt: -1 }).limit(100);
+  res.json({
+    success: true,
+    data: users
+  });
+});

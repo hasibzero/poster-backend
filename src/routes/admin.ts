@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authenticate, authorize } from '../middleware/auth';
-import { getModerationQueue, deletePoster, getAnalytics } from '../controllers/adminController';
+import { getModerationQueue, deletePoster, getAnalytics, getUsers } from '../controllers/adminController';
 
 const router = Router();
 
@@ -10,5 +10,6 @@ router.use(authenticate, authorize('admin'));
 router.get('/posters', getModerationQueue);
 router.delete('/posters/:id', deletePoster);
 router.get('/analytics', getAnalytics);
+router.get('/users', getUsers);
 
 export default router;
