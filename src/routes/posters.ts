@@ -5,7 +5,9 @@ import {
   getUserPosters, 
   regeneratePoster, 
   deletePoster,
-  downloadPoster
+  downloadPoster,
+  bulkCreatePosters,
+  getBulkStatus
 } from '../controllers/posterController';
 import { authenticate } from '../middleware/auth';
 import { validate } from '../middleware/validation';
@@ -32,6 +34,8 @@ const createPosterSchema = z.object({
 });
 
 router.post('/', authenticate, validate(createPosterSchema), createPoster);
+router.post('/bulk', authenticate, bulkCreatePosters);
+router.get('/bulk/status', authenticate, getBulkStatus);
 router.get('/user', authenticate, getUserPosters);
 router.get('/:id', authenticate, getPoster);
 router.post('/:id/regenerate', authenticate, regeneratePoster);

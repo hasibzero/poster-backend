@@ -253,3 +253,50 @@ export const downloadPoster = asyncHandler(async (req: AuthRequest, res: Respons
     res.redirect(poster.generatedImageUrl);
   }
 });
+
+export const getBulkStatus = asyncHandler(async (req: Request, res: Response) => {
+  res.json({ success: true, data: { status: 'completed' } });
+});
+
+export const bulkCreatePosters = asyncHandler(async (req: Request, res: Response) => {
+  const { templateId, csvData, occasionType } = req.body;
+  const userId = req.user?._id;
+
+  if (!templateId || !csvData || !Array.isArray(csvData)) {
+    res.status(400).json({ success: false, error: 'Invalid bulk data' });
+    return;
+  }
+
+  const postersToCreate = csvData.map((row: any) => ({
+    userId,
+    templateId,
+    formData: {
+      name: row.name || '',
+      designation: row.designation || '',
+      party: row.party || '',
+      district: row.district || '',
+      upazila: row.upazila || '',
+      union: row.union || '',
+      occasionType: occasionType || 'campaign',
+      headlineText: row.headlineText || 'প্রচারণা',
+    },
+    uploadedPhotoUrls: row.photoUrl ? [row.photoUrl] : [],
+    status: 'draft',
+    retryCount: 0,
+  }));
+
+  const inserted = await Poster.insertMany(postersToCreate);
+
+  inserted.forEach(poster => {
+    Poster.findByIdAndUpdate(poster._id, { status: 'generating' }).exec();
+    generatePosterAsync(poster._id.toString()).catch(console.error);
+  });
+
+  res.status(201).json({
+    success: true,
+    data: {
+      message: `${inserted.length} posters queued for generation`,
+      jobId: `bulk_${Date.now()}`,
+    }
+  });
+});
