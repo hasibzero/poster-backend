@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { connectDB, disconnectDB } from '../src/config/db';
 import { Template, Poster } from '../src/models';
-import { TemplateLayoutConfig } from 'shared/types';
+import { TemplateLayoutConfig } from '../shared/types';
 
 const createVictoryTemplate = (): Partial<TemplateLayoutConfig> => ({
   dimensions: { width: 1200, height: 1600 },
