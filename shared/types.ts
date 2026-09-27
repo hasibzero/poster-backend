@@ -76,6 +76,8 @@ export interface PosterFormData {
   occasionType: string;
   headlineText: string;
   subHeadline?: string;
+  layoutMode?: '1-up' | '2-up' | '3-up';
+  fontFamily?: string;
 }
 
 export interface Poster {

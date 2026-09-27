@@ -82,8 +82,13 @@ const generatePosterHTML = (options: RenderOptions): string => {
     credit: `প্রচারে: ${formData.name}, ${formData.designation}, ${formData.party}`,
   };
 
+  let activePhotoSlots = photoSlots;
+  if (formData.layoutMode === '1-up') activePhotoSlots = photoSlots.slice(0, 1);
+  if (formData.layoutMode === '2-up') activePhotoSlots = photoSlots.slice(0, 2);
+  if (formData.layoutMode === '3-up') activePhotoSlots = photoSlots.slice(0, 3);
+
   // Process Photo Slots
-  const photosHTML = photoSlots.map((slot, index) => {
+  const photosHTML = activePhotoSlots.map((slot, index) => {
     const photoUrl = photoUrls[index] || '';
     const adjustment = photoAdjustments.find((pa: any) => pa.slotIndex === index) || {};
     const borderColor = adjustment.borderColor || colors.accent;
@@ -143,7 +148,7 @@ const generatePosterHTML = (options: RenderOptions): string => {
         top: ${slot.y}px;
         max-width: ${slot.maxWidth}px;
         font-size: ${fontSize}px;
-        font-family: '${slot.fontFamily}', 'Noto Sans Bengali', 'Kalpurush', 'Hind Siliguri', sans-serif;
+        font-family: '${formData.fontFamily || slot.fontFamily}', 'Noto Sans Bengali', 'Kalpurush', 'Hind Siliguri', sans-serif;
         color: ${color};
         text-align: ${slot.align};
         font-weight: ${fontWeight};
