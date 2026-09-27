@@ -12,19 +12,31 @@ let browser: any = null;
 
 export const getBrowser = async (): Promise<any> => {
   if (!browser || !browser.isConnected()) {
-    const puppeteer = (await import('puppeteer')).default || await import('puppeteer');
-    browser = await puppeteer.launch({
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu',
-      ],
-    });
+    if (process.env.VERCEL) {
+      const puppeteer = (await import('puppeteer-core')).default || await import('puppeteer-core');
+      const chromium = (await import('@sparticuz/chromium')).default || await import('@sparticuz/chromium');
+      
+      browser = await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
+      });
+    } else {
+      const puppeteer = (await import('puppeteer')).default || await import('puppeteer');
+      browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          '--disable-gpu',
+        ],
+      });
+    }
   }
   return browser;
 };
