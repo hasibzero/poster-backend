@@ -152,10 +152,11 @@ const generatePosterAsync = async (posterId: string) => {
   const startTime = Date.now();
   
   try {
-    const poster = await Poster.findById(posterId).populate('templateId');
+    const poster = await Poster.findById(posterId).populate(['templateId', 'userId']);
     if (!poster) return;
 
     const template = poster.templateId as any;
+    const user = poster.userId as any;
     const occasionColors = OCCASION_COLORS[poster.formData.occasionType as keyof typeof OCCASION_COLORS] || OCCASION_COLORS.campaign;
 
     // Get Gemini suggestions
@@ -172,6 +173,7 @@ const generatePosterAsync = async (posterId: string) => {
       photoUrls: poster.uploadedPhotoUrls,
       geminiSuggestions,
       occasionColors,
+      isPremium: user?.isPremium || false,
     });
 
     // Upload to Cloudinary

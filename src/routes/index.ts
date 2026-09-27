@@ -4,6 +4,7 @@ import posterRoutes from './posters';
 import uploadRoutes from './upload';
 
 import adminRoutes from './admin';
+import paymentRoutes from './payments';
 
 const routes = (app: any) => {
   app.use('/api/auth', authRoutes);
@@ -11,6 +12,7 @@ const routes = (app: any) => {
   app.use('/api/posters', posterRoutes);
   app.use('/api/upload', uploadRoutes);
   app.use('/api/admin', adminRoutes);
+  app.use('/api/payments', paymentRoutes);
   
   app.get('/', (req: any, res: any) => {
     res.json({ success: true, message: 'Poster API is running perfectly on Vercel!' });
